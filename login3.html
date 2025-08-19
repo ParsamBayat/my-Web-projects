@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سوئیچ حالت لایت/دارک مود</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #4285f4;
+        }
+
+        .switch-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #4285f4;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        .mode-label {
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"], input[type="email"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+            background-color: #fff;
+            color: #333;
+        }
+
+        button {
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            display: block;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #357ae8;
+        }
+
+        .error-message {
+            color: #d93025;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        /* استایل‌های دارک مود */
+        body.dark-mode {
+            background-color: #1a1a1a;
+            color: #f5f5f5;
+        }
+
+        body.dark-mode .container {
+            background-color: #2a2a2a;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+        }
+
+        body.dark-mode h1 {
+            color: #8ab4f8;
+        }
+
+        body.dark-mode input[type="text"], 
+        body.dark-mode input[type="email"] {
+            background-color: #3a3a3a;
+            color: #f5f5f5;
+            border-color: #555;
+        }
+
+        body.dark-mode .error-message {
+            color: #f28b82;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>فریمورک حالت روز/شب</h1>
+        
+        <div class="switch-container">
+            <span class="mode-label">حالت شب</span>
+            <label class="switch">
+                <input type="checkbox" id="mode-switch">
+                <span class="slider"></span>
+            </label>
+            <span class="mode-label">حالت روز</span>
+        </div>
+        
+        <div class="form-group">
+            <label for="name">نام کامل</label>
+            <input type="text" id="name" placeholder="نام خود را وارد کنید">
+            <div class="error-message" id="name-error">لطفاً نام خود را وارد کنید</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="email">ایمیل</label>
+            <input type="email" id="email" placeholder="ایمیل خود را وارد کنید">
+            <div class="error-message" id="email-error">لطفاً یک ایمیل معتبر وارد کنید</div>
+        </div>
+        
+        <button id="submit-btn">ارسال اطلاعات</button>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            // بررسی وضعیت اولیه حالت (ذخیره شده در localStorage)
+            if (localStorage.getItem('darkMode') === 'true') {
+                enableDarkMode();
+            }
+            
+            // تغییر حالت با کلیک روی سوئیچ
+            $('#mode-switch').change(function() {
+                if ($(this).is(':checked')) {
+                    enableDarkMode();
+                } else {
+                    enableLightMode();
+                }
+            });
+            
+            // اعتبارسنجی فرم
+            $('#submit-btn').click(function() {
+                validateForm();
+            });
+            
+            // اعتبارسنجی هنگام تایپ
+            $('#name, #email').on('input', function() {
+                validateField($(this));
+            });
+            
+            // توابع تغییر حالت
+            function enableDarkMode() {
+                $('body').addClass('dark-mode');
+                $('#mode-switch').prop('checked', true);
+                localStorage.setItem('darkMode', 'true');
+            }
+            
+            function enableLightMode() {
+                $('body').removeClass('dark-mode');
+                $('#mode-switch').prop('checked', false);
+                localStorage.setItem('darkMode', 'false');
+            }
+            
+            // اعتبارسنجی فیلدها
+            function validateField(field) {
+                let isValid = true;
+                const errorElement = $('#' + field.attr('id') + '-error');
+                
+                if (field.attr('id') === 'name') {
+                    if (field.val().trim() === '') {
+                        isValid = false;
+                        errorElement.text('لطفاً نام خود را وارد کنید');
+                    } else if (field.val().trim().length < 3) {
+                        isValid = false;
+                        errorElement.text('نام باید حداقل ۳ حرف داشته باشد');
+                    }
+                }
+                
+                if (field.attr('id') === 'email') {
+                    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (field.val().trim() === '') {
+                        isValid = false;
+                        errorElement.text('لطفاً ایمیل خود را وارد کنید');
+                    } else if (!emailPattern.test(field.val())) {
+                        isValid = false;
+                        errorElement.text('لطفاً یک ایمیل معتبر وارد کنید');
+                    }
+                }
+                
+                if (isValid) {
+                    errorElement.hide();
+                    field.css('border-color', '');
+                } else {
+                    errorElement.show();
+                    field.css('border-color', '#d93025');
+                    if ($('body').hasClass('dark-mode')) {
+                        field.css('border-color', '#f28b82');
+                    }
+                }
+                
+                return isValid;
+            }
+            
+            // اعتبارسنجی کل فرم
+            function validateForm() {
+                let isFormValid = true;
+                
+                // اعتبارسنجی تمام فیلدها
+                isFormValid = validateField($('#name')) && isFormValid;
+                isFormValid = validateField($('#email')) && isFormValid;
+                
+                if (isFormValid) {
+                    alert('فرم با موفقیت ارسال شد!');
+                    // در اینجا می‌توانید اقدام به ارسال فرم کنید
+                } else {
+                    alert('لطفاً خطاهای فرم را برطرف کنید');
+                }
+            }
+        });
+    </script>
+</body>
+</html>

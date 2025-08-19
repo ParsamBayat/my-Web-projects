@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>وبسایت رسمی رویال رول پلی</title>
+   <link rel="stylesheet" href="Library/Styles/style.css">
+   <link rel="shortcut icon" href="Library/imgs/logo2.png" type="image/x-icon">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Royal RolePlay</h1>
+            <p>بهترین تجربه نقش آفرینی در SA-MP</p>
+        </header>
+        
+        <div class="welcome-box">
+            <h3>به جامعه رویال رول پلی خوش آمدید</h3>
+            <p>اگر کاربر جدید هستید، با کلیک بر روی دکمه ثبت نام در بخش پایین، می‌توانید به جمع بازیگران ما بپیوندید و تجربه‌ای منحصر به فرد از نقش‌آفرینی در دنیای Sa-MP داشته باشید.</p>
+        </div>
+        
+        <div class="links-container">
+            <a href="t.me/royalrp_official" class="social-link">کانال تلگرام</a>
+            <a href="panel.com" class="social-link panel-link">پنل کاربری</a>
+            <a href="" class="social-link shop-link" id="shop-power">فروشگاه سرور</a>
+        </div>
+        
+        <div class="content-wrapper">
+            <div class="game-image">
+                <img src="Library/imgs/mobile-image-4.png" alt="تصویر بازی SA-MP">
+            </div>
+            <div class="register-section">
+                <button class="register-btn" id="registerBtn">
+                    <a href="login3.html">ثبت‌نام در سرور</a>
+                </button>
+                <p style="margin-top: 20px; opacity: 0.8;">با ثبت نام از امکانات ویژه سرور بهره‌مند شوید</p>
+            </div>
+        </div>
+        
+
+        <!--
+        
+        
+        برای این بخش از عکس استفاده نشده و از ایتم های دیفالت ویندوز استفاده شده
+        و از افزایش باگ جلوگیری شده است ....
+
+
+        
+        -->
+        <div class="features">
+            <div class="feature-box">
+                <div class="feature-icon">👑</div>
+                <h3 class="feature-title">سیستم نقش آفرینی پیشرفته</h3>
+                <p class="feature-desc">تجربه‌ای واقعی از زندگی در لس سانتوس</p>
+            </div>
+            <div class="feature-box">
+                <div class="feature-icon">🚔</div>
+                <h3 class="feature-title">سیستم پلیسی واقعی</h3>
+                <p class="feature-desc">با قوانین و سیستم پلیسی منحصر به فرد</p>
+            </div>
+            <div class="feature-box">
+                <div class="feature-icon">💼</div>
+                <h3 class="feature-title">شغل‌های متنوع</h3>
+                <p class="feature-desc">ده‌ها شغل مختلف برای انتخاب شما</p>
+            </div>
+        </div>
+    </div>
+    <P id="Designe">Designed by Parsa Bayat&copy;</P>
+
+    <!-- jQuery -->
+    <script src="Library/Jquery/jq.js"></script>
+    <script>
+        $(document).ready(function() {
+            
+            $(".social-link, .register-btn").hover(
+                function() {
+                    $(this).css('transform', 'translateY(-5px)');
+                },
+                function() {
+                    $(this).css('transform', 'translateY(0)');
+                }
+            );
+            
+            $("#registerBtn").click(function(e) {
+                e.preventDefault();
+                $(this).css({
+                    'transform': 'scale(0.95) translateY(-5px)',
+                    'box-shadow': '0 5px 15px rgba(231, 76, 60, 0.2)'
+                });
+                
+                setTimeout(function() {
+                    window.location.href = "login3.html";
+                }, 300);
+            });
+
+            $("#shop-power").click(function(e) {
+                alert("این صفحه در دست ساخت است[-Error]");
+            });
+            
+           
+            $(window).scroll(function() {
+                $(".feature-box").each(function() {
+                    var position = $(this).offset().top;
+                    var scroll = $(window).scrollTop();
+                    var windowHeight = $(window).height();
+                    
+                    if (scroll > position - windowHeight + 100) {
+                        $(this).css({
+                            'opacity': '1',
+                            'transform': 'translateY(0)'
+                        });
+                    }
+                });
+            });
+            
+            
+            $(window).trigger('scroll');
+        });
+    </script>
+</body>
+</html>
