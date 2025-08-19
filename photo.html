@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>گالری تصاویر SA-MP | 2026</title>
+    <link rel="stylesheet" href="Library/fonts/all.min.css">
+    <link rel="stylesheet" href="Library/Styles/Style2.css">
+    
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-gamepad"></i>
+            </div>
+            <h1>گالری تصاویر Royal RP</h1>
+            <p>لحظات خاطره انگیز در سرور رویال</p>
+            <div class="samp-badge">San Andreas Multiplayer</div>
+        </header>
+        
+        <div class="gallery-controls">
+            <button class="filter-btn active" data-filter="all">همه</button>
+            <button class="filter-btn" data-filter="server">انواع سبک</button>
+            <button class="filter-btn" data-filter="vehicle">وسایل نقلیه</button>
+            <button class="filter-btn" data-filter="property">املاک</button>
+            <button class="filter-btn" data-filter="event">رویدادها</button>
+        </div>
+        
+        <div class="gallery">
+            <div class="gallery-item" data-category="server">
+                <img src="https://images.unsplash.com/photo-1593305841991-05c297ba4575?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="سرور نقش آفرینی">
+                <div class="item-overlay">
+                    <h3 class="item-title">سرور نقش آفرینی</h3>
+                    <p class="item-desc">تجربه بازی واقعی با مکانیزم نقش آفرینی پیشرفته</p>
+                </div>
+            </div>
+            
+            <div class="gallery-item" data-category="vehicle">
+                <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="ماشین های سوپر">
+                <div class="item-overlay">
+                    <h3 class="item-title">ماشین های سوپر</h3>
+                    <p class="item-desc">مجموعه ای از بهترین خودروهای موجود در سرور</p>
+                </div>
+            </div>
+            
+            <div class="gallery-item" data-category="property">
+                <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="ویلای لاکچری">
+                <div class="item-overlay">
+                    <h3 class="item-title">ویلای لاکچری</h3>
+                    <p class="item-desc">خرید ملک و تجربه زندگی لاکچری در Los Santos</p>
+                </div>
+            </div>
+            
+            <div class="gallery-item" data-category="event">
+                <img src="https://images.unsplash.com/photo-1460881680858-30d872d5b530?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="مسابقات اتومبیل رانی">
+                <div class="item-overlay">
+                    <h3 class="item-title">مسابقات اتومبیل رانی</h3>
+                    <p class="item-desc">شرکت در مسابقات هیجان انگیز با جایزه های نقدی</p>
+                </div>
+            </div>
+            
+            <div class="gallery-item" data-category="server">
+                <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="سرور جنگ">
+                <div class="item-overlay">
+                    <h3 class="item-title">سرور جنگ</h3>
+                    <p class="item-desc">نبردهای تیمی و هیجان انگیز با سلاح های پیشرفته</p>
+                </div>
+            </div>
+            
+            <div class="gallery-item" data-category="vehicle">
+                <img src="https://images.unsplash.com/photo-1544829099-b9a0c07fad1a?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="هلیکوپترهای نظامی">
+                <div class="item-overlay">
+                    <h3 class="item-title">هلیکوپترهای نظامی</h3>
+                    <p class="item-desc">کنترل آسمان ها با هلیکوپترهای مجهز</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="lightbox">
+            <button class="close-btn"><i class="fas fa-times"></i></button>
+            <button class="nav-btn prev-btn"><i class="fas fa-chevron-right"></i></button>
+            <button class="nav-btn next-btn"><i class="fas fa-chevron-left"></i></button>
+            <div class="lightbox-content">
+                <img src="" alt="">
+                <div class="caption"></div>
+            </div>
+        </div>
+        
+        <footer>
+            <P>Designed by Parsa Bayat&copy;</P>
+        </footer>
+    </div>
+
+    <script src="Library/Jquery/jq.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.filter-btn').on('click', function() {
+                $('.filter-btn').removeClass('active');
+                $(this).addClass('active');
+                
+                const filter = $(this).data('filter');
+                
+                if (filter === 'all') {
+                    $('.gallery-item').show();
+                } else {
+                    $('.gallery-item').hide();
+                    $(`.gallery-item[data-category="${filter}"]`).show();
+                }
+            });
+            
+            const lightbox = $('.lightbox');
+            const lightboxImg = $('.lightbox-content img');
+            const lightboxCaption = $('.caption');
+            const galleryItems = $('.gallery-item');
+            let currentIndex = 0;
+            
+            galleryItems.each(function(index) {
+                $(this).on('click', function() {
+                    currentIndex = index;
+                    updateLightbox();
+                    lightbox.addClass('open');
+                });
+            });
+            
+            function updateLightbox() {
+                const src = $(galleryItems[currentIndex]).find('img').attr('src');
+                const alt = $(galleryItems[currentIndex]).find('img').attr('alt');
+                const title = $(galleryItems[currentIndex]).find('.item-title').text();
+                
+                lightboxImg.attr('src', src);
+                lightboxImg.attr('alt', alt);
+                lightboxCaption.text(title);
+            }
+            
+            $('.close-btn').on('click', function() {
+                lightbox.removeClass('open');
+            });
+            
+            $('.next-btn').on('click', function(e) {
+                e.stopPropagation();
+                currentIndex = (currentIndex + 1) % galleryItems.length;
+                updateLightbox();
+            });
+            
+            $('.prev-btn').on('click', function(e) {
+                e.stopPropagation();
+                currentIndex = (currentIndex - 1 + galleryItems.length) % galleryItems.length;
+                updateLightbox();
+            });
+            
+            lightbox.on('click', function(e) {
+                if ($(e.target).hasClass('lightbox')) {
+                    lightbox.removeClass('open');
+                }
+            });
+            
+            $(document).on('keydown', function(e) {
+                if (lightbox.hasClass('open')) {
+                    if (e.key === 'Escape') {
+                        lightbox.removeClass('open');
+                    } else if (e.key === 'ArrowRight') {
+                        currentIndex = (currentIndex + 1) % galleryItems.length;
+                        updateLightbox();
+                    } else if (e.key === 'ArrowLeft') {
+                        currentIndex = (currentIndex - 1 + galleryItems.length) % galleryItems.length;
+                        updateLightbox();
+                    }
+                }
+            });
+            
+            $('a[href*="#"]').on('click', function(e) {
+                e.preventDefault();
+                $('html, body').animate({
+                    scrollTop: $($(this).attr('href')).offset().top
+                }, 500);
+            });
+        });
+    </script>
+</body>
+</html>
