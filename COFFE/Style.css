@@ -1,0 +1,182 @@
+* {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 100%);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 450px;
+        }
+        
+        .card {
+            background: rgba(25, 25, 40, 0.8);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(105, 0, 179, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(138, 43, 226, 0.2);
+        }
+        
+        .logo {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .logo h1 {
+            color: #9b30ff;
+            font-size: 28px;
+            text-shadow: 0 0 10px rgba(155, 48, 255, 0.7);
+            margin-bottom: 5px;
+        }
+        
+        .logo p {
+            color: #d8bfd8;
+            font-size: 14px;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #d8bfd8;
+            font-size: 14px;
+        }
+        
+        .input-group i {
+            position: absolute;
+            left: 15px;
+            top: 40px;
+            color: #9b30ff;
+        }
+        
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 12px 15px 12px 40px;
+            background: rgba(15, 15, 25, 0.7);
+            border: 1px solid #4b0082;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .input-group input:focus, .input-group select:focus {
+            outline: none;
+            border-color: #9b30ff;
+            box-shadow: 0 0 10px rgba(155, 48, 255, 0.5);
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(45deg, #6a0dad, #9b30ff);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+        
+        .btn:hover {
+            background: linear-gradient(45deg, #9b30ff, #6a0dad);
+            box-shadow: 0 0 15px rgba(155, 48, 255, 0.7);
+            transform: translateY(-2px);
+        }
+        
+        .links {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        
+        .links a {
+            color: #9370db;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .links a:hover {
+            color: #ba55d3;
+            text-decoration: underline;
+        }
+        
+        .divider {
+            height: 1px;
+            background: linear-gradient(to right, transparent, #6a0dad, transparent);
+            margin: 25px 0;
+        }
+        
+        .server-type {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .server-option {
+            background: rgba(15, 15, 25, 0.7);
+            border: 1px solid #4b0082;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .server-option:hover, .server-option.selected {
+            border-color: #9b30ff;
+            background: rgba(155, 48, 255, 0.1);
+        }
+        
+        .server-option i {
+            font-size: 24px;
+            color: #9b30ff;
+            margin-bottom: 5px;
+        }
+        
+        .copyright {
+            text-align: center;
+            margin-top: 30px;
+            color: #9370db;
+            font-size: 12px;
+        }
+        
+        @media (max-width: 480px) {
+            .card {
+                padding: 20px;
+            }
+            
+            .logo h1 {
+                font-size: 24px;
+            }
+            
+            .links {
+                flex-direction: column;
+                gap: 10px;
+                align-items: center;
+            }
+            
+            .server-type {
+                grid-template-columns: 1fr;
+            }
+        }
