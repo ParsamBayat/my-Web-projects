@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doc</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="pride.png">
+</head>
+<body>
+    <div class="container">
+        <h1>مدیریت کارهای روزانه + فال حافظ</h1>
+        
+        <div class="input-section">
+            <input type="text" id="task-input" placeholder="کار جدید خود را وارد کنید...">
+            <button id="add-btn">افزودن کار</button>
+        </div>
+        
+        <div class="error-message" id="error-message">لطفاً یک کار وارد کنید.</div>
+        
+        <div class="controls">
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">همه کارها</button>
+                <button class="filter-btn" data-filter="active">کارهای انجام نشده</button>
+                <button class="filter-btn" data-filter="completed">کارهای انجام شده</button>
+            </div>
+            <div>
+                <button id="clear-all">حذف همه</button>
+                <div class="clear-all-info" id="clear-all-info">برای فعال شدن این دکمه، حداقل ۲ کار باید وارد کنید</div>
+            </div>
+        </div>
+        
+        <ul class="task-list" id="task-list">
+            <!-- کارها در اینجا نمایش داده می‌شوند -->
+        </ul>
+        
+        <div class="fortune-section">
+            <button id="fortune-btn">فال حافظ بگیرید</button>
+            <div class="fortune-result" id="fortune-result">
+                <div class="fortune-poem" id="fortune-poem"></div>
+                <div class="fortune-interpretation" id="fortune-interpretation"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const taskInput = document.getElementById('task-input');
+            const addBtn = document.getElementById('add-btn');
+            const taskList = document.getElementById('task-list');
+            const errorMessage = document.getElementById('error-message');
+            const clearAllBtn = document.getElementById('clear-all');
+            const clearAllInfo = document.getElementById('clear-all-info');
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const fortuneBtn = document.getElementById('fortune-btn');
+            const fortuneResult = document.getElementById('fortune-result');
+            const fortunePoem = document.getElementById('fortune-poem');
+            const fortuneInterpretation = document.getElementById('fortune-interpretation');
+            
+            let tasks = [];
+            let currentFilter = 'all';
+            
+            
+            const fortunes = [
+                {
+                    poem: "صبح  دمی با غم هجران بسازیم\nوین شب که گذشت دیگر نمی‌آید باز",
+                    interpretation: "این بیت به شما یادآوری می‌کند که از زمان حال نهایت فاده را ببرید و فرصت‌ها را از دست ندهید. شاید زمان آن رسیده که با شرایط سخت کنار بیایید و از فرصت‌های پیش رو فاده کنید."
+                },
+                {
+                    poem: "در کار خیر حاجت هیچ خاره نیست\nآنچه مصلحت  همان کردن اولی",
+                    interpretation: "حافظ در این بیت می‌گوید برای کارهای نیک نیاز به تردید و خاره نیست. اگر کاری درست و شایسته ، بهتر  بدون تعلل انجامش دهید."
+                },
+                {
+                    poem: "می‌دهد تاکی به امید دل خویش\nکه به ناامیدی از این در توان رفت",
+                    interpretation: "این شعر بیانگر امیدواری و تلاش مداوم . حتی در سخت‌ترین شرایط نیز نباید ناامید شد و باید به راه خود ادامه داد."
+                },
+                {
+                    poem: "چنین قفس نه سزای چو من خوش الحانیست\nروم به گلشن رضوان که مرغ آن چمنم",
+                    interpretation: "حافظ در این بیت از محدودیت‌ها و قفس زندگی می‌گوید و آرزوی آزادی و رسیدن به جایگاه والاتر دارد. شاید شما نیز نیاز دارید از محدودیت‌ها رها شوید."
+                },
+                {
+                    poem: "دل می‌رود ز دستم صاحبدلان خدا را\nدردا که راز پنهان خواهد شد آشکارا",
+                    interpretation: "این بیت نشان می‌دهد که رازهای درونی شما ممکن  به زودی آشکار شود. بهتر  با احتیاط عمل کنید و اسرار خود را محفوظ نگه دارید."
+                },
+                {
+                    poem: "صبر کن حافظ به سختی روز و شب\nعاقبت روزی بیابی کام را",
+                    interpretation: "پیام این شعر امیدواری و صبر در برابر مشکلات . اگر در شرایط سختی هستید، بدانید که پایان خوبی در انتظار شم."
+                },
+                {
+                    poem: "هرگز نمیرد آنکه دلش زنده شد به عشق\nثبت  بر جریده عالم دوام ما",
+                    interpretation: "این بیت بر قدرت عشق و علاقه در زندگی تأکید دارد. اگر با عشق و علاقه کاری را انجام دهید، ماندگار و تأثیرگذار خواهد بود."
+                },
+                {
+                    poem: "مژده ای دل که دگر باد صبا باز آمد\nهدهد خوش خبر از طرف سبا باز آمد",
+                    interpretation: "این شعر نویددهنده خبرهای خوب و تغییرات مثبت . منتظر تحولات خوشایند در زندگی خود باشید."
+                }
+            ];
+            
+            
+            function addTask() {
+                const taskText = taskInput.value.trim();
+                
+                if (taskText === '') {
+                    errorMessage.style.display = 'block';
+                    return;
+                }
+                
+                errorMessage.style.display = 'none';
+                
+                const task = {
+                    id: Date.now(),
+                    text: taskText,
+                    completed: false
+                };
+                
+                tasks.push(task);
+                taskInput.value = '';
+                renderTasks();
+                updateClearAllButton();
+            }
+            
+            
+            function renderTasks() {
+                taskList.innerHTML = '';
+                
+                let filteredTasks = tasks;
+                
+                if (currentFilter === 'active') {
+                    filteredTasks = tasks.filter(task => !task.completed);
+                } else if (currentFilter === 'completed') {
+                    filteredTasks = tasks.filter(task => task.completed);
+                }
+                
+                if (filteredTasks.length === 0) {
+                    const emptyState = document.createElement('div');
+                    emptyState.className = 'empty-state';
+                    emptyState.innerHTML = `
+                        <i>📝</i>
+                        <p>هیچ کاری ${currentFilter === 'all' ? 'وجود ندارد' : currentFilter === 'active' ? 'انجام نشده' : 'انجام شده'} .</p>
+                    `;
+                    taskList.appendChild(emptyState);
+                    return;
+                }
+                
+                filteredTasks.forEach(task => {
+                    const taskItem = document.createElement('li');
+                    taskItem.className = `task-item ${task.completed ? 'completed' : ''}`;
+                    taskItem.innerHTML = `
+                        <span class="task-text ${task.completed ? 'completed' : ''}">${task.text}</span>
+                        <div class="task-actions">
+                            <button class="complete-btn">${task.completed ? 'لغو' : 'انجام شد'}</button>
+                            <button class="delete-btn">حذف</button>
+                        </div>
+                    `;
+                    
+                    taskList.appendChild(taskItem);
+                    
+                    
+                    const completeBtn = taskItem.querySelector('.complete-btn');
+                    completeBtn.addEventListener('click', () => toggleComplete(task.id));
+                    
+                    
+                    const deleteBtn = taskItem.querySelector('.delete-btn');
+                    deleteBtn.addEventListener('click', () => deleteTask(task.id));
+                });
+            }
+            
+            
+            function toggleComplete(taskId) {
+                tasks = tasks.map(task => {
+                    if (task.id === taskId) {
+                        return { ...task, completed: !task.completed };
+                    }
+                    return task;
+                });
+                
+                renderTasks();
+            }
+            
+            
+            function deleteTask(taskId) {
+                tasks = tasks.filter(task => task.id !== taskId);
+                renderTasks();
+                updateClearAllButton();
+            }
+            
+         
+            function clearAllTasks() {
+                if (tasks.length === 0) return;
+                
+                if (confirm('آیا از حذف همه کارها مطمئن هستید؟')) {
+                    tasks = [];
+                    renderTasks();
+                    updateClearAllButton();
+                }
+            }
+            
+          
+            function setFilter(filter) {
+                currentFilter = filter;
+                filterButtons.forEach(btn => {
+                    if (btn.dataset.filter === filter) {
+                        btn.classList.add('active');
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                });
+                renderTasks();
+            }
+            
+
+            function updateClearAllButton() {
+                if (tasks.length >= 2) {
+                    clearAllBtn.style.display = 'block';
+                    clearAllInfo.style.display = 'none';
+                } else {
+                    clearAllBtn.style.display = 'none';
+                    clearAllInfo.style.display = 'block';
+                }
+            }
+            
+       
+            function getFortune() {
+                const randomIndex = Math.floor(Math.random() * fortunes.length);
+                const fortune = fortunes[randomIndex];
+                
+                fortunePoem.textContent = fortune.poem;
+                fortuneInterpretation.textContent = fortune.interpretation;
+                fortuneResult.style.display = 'block';
+                
+               
+                fortuneResult.scrollIntoView({ behavior: 'smooth' });
+            }
+            
+      
+            addBtn.addEventListener('click', addTask);
+            
+            taskInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    addTask();
+                }
+            });
+            
+            clearAllBtn.addEventListener('click', clearAllTasks);
+            
+            filterButtons.forEach(btn => {
+                btn.addEventListener('click', () => setFilter(btn.dataset.filter));
+            });
+            
+            fortuneBtn.addEventListener('click', getFortune);
+            
+            
+            renderTasks();
+            updateClearAllButton();
+        });
+    </script>
+</body>
+</html>
